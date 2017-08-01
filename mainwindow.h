@@ -4,7 +4,7 @@
 #include <QMainWindow>
 
 class QGraphicsScene;
-
+class MasterJPEG;
 
 namespace Ui {
 class MainWindow;
@@ -17,16 +17,22 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
+	std::pair<int, int> getXYFrame() const;
 
 private:
 	Ui::MainWindow *ui;
 	QString jpegFile;
 	QGraphicsScene *displayScene;
+	int xFrame;
+	int yFrame;
+	MasterJPEG *bigJPEG;
 
 public slots:
-	void showImage(QImage *picture, const uint64_t xImage,
-		const uint64_t yImage, const uint64_t xFrame,
-		const uint64_t yFrame);
+	void displayInitialImage();
+
+signals:
+	void showImage(const QImage* pic, const int xPic, const int yPic,
+		const int xFrame, const int yFrame);
 };
 
 #endif // MAINWINDOW_H

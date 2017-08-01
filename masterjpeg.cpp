@@ -10,12 +10,8 @@ using namespace std;
 
 MasterJPEG::MasterJPEG(const QString& jpegName, MainWindow *mainWindow)
 {
-	handleImageLoad = QObject::connect(this, SIGNAL(imageLoaded()),
-		this, SLOT(showLoadedImage()));
-	handleImageDisplay = QObject::connect(this,
-		SIGNAL(drawImage(QImage*,const uint64_t,const uint64_t,const uint64_t,const uint64_t)),
-		mainWindow,
-		SLOT(showImage(QImage*,const uint64_t,const uint64_t,const uint64_t, const uint64_t)));
+	handleImageLoad = QObject::connect(this, SIGNAL(imageBuilt()),
+		mainWindow, SLOT(displayInitialImage()));
 	struct jpeg_decompress_struct cinfo;
 	struct jpeg_error_mgr jerr;
 	FILE* inFile;
@@ -48,14 +44,13 @@ MasterJPEG::MasterJPEG(const QString& jpegName, MainWindow *mainWindow)
 	jpeg_destroy_decompress(&cinfo);
 	fclose(inFile);
 
-	emit imageLoaded();
+	buildMasterImage();
 }
 
 MasterJPEG::~MasterJPEG()
 {
+	delete masterImage;
 	QObject::disconnect(handleImageLoad);
-	QObject::disconnect(handleImageDisplay);
-	delete mainPicture;
 }
 
 void MasterJPEG::setPictureWidth(const JDIMENSION width)
@@ -75,18 +70,9 @@ void MasterJPEG::storeScannedLine(JSAMPROW sampledLine)
 	lines.push_back(lineIn);
 }
 
-void MasterJPEG::_showLoadedImage(const uint64_t topXImage,
-	const uint64_t topYImage,const uint64_t topXframe,
-	const uint64_t topYFrame)
+void MasterJPEG::buildMasterImage()
 {
-	emit drawImage(mainPicture, topXframe, topYImage, topXframe,
-		topYFrame);
-}
-
-
-void MasterJPEG::showLoadedImage()
-{
-	mainPicture = new QImage(imageWidth, imageHeight,
+	masterImage = new QImage(imageWidth, imageHeight,
 		QImage::Format_Grayscale8);
 	int i = 0;
 	for (auto innerLine: lines){
@@ -94,13 +80,16 @@ void MasterJPEG::showLoadedImage()
 		{
 			uint8_t value = *(innerLine + j);
 			QRgb pixels = qRgb(value, value, value);
-			mainPicture->setPixel(j, i, pixels);
+			masterImage->setPixel(j, i, pixels);
 		}
 		i++;
 	}
-
-	_showLoadedImage(0, 0, 0, 0);
+	emit imageBuilt();
 }
 
+QImage* MasterJPEG::getMasterImage() const
+{
+	return masterImage;
+}
 
 

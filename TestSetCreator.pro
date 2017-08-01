@@ -16,9 +16,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    masterjpeg.cpp
+    masterjpeg.cpp \
+    picturedisplay.cpp
 
 HEADERS  += mainwindow.h \
-    masterjpeg.hpp
+    masterjpeg.hpp \
+    picturedisplay.hpp
 
 FORMS    += mainwindow.ui

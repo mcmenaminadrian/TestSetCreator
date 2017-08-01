@@ -15,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	FILE* inFile;
 	ui->setupUi(this);
 
-	jpegFile = QFileDialog::getOpenFileName(this, tr("Pick JPEG"), "");
+	jpegFile = QFileDialog::getOpenFileName(this, tr("Pick JPEG"), "",
+		tr("JPEGs (*.jpeg *.jpg *.jfif)"));
 	if ((inFile = fopen(qPrintable(jpegFile), "rb")) == NULL){
 			fprintf(stderr, "cannot open %s\n", qPrintable(jpegFile));
 			return;
@@ -23,19 +24,21 @@ MainWindow::MainWindow(QWidget *parent) :
 	//load the file
 	displayScene = new QGraphicsScene();
 	ui->graphicsView->setScene(displayScene);
-	MasterJPEG bigJPEG(jpegFile, this);
+	QObject::connect(this, SIGNAL(showImage(QImage,int,int,int,int)),
+		ui->graphicsView,
+		SLOT(displayImage(QImage*, int, int, int, int)));
+	bigJPEG = new MasterJPEG(jpegFile, this);
 }
 
 MainWindow::~MainWindow()
 {
+	delete bigJPEG;
 	delete displayScene;
 	delete ui;
 }
 
-void MainWindow::showImage(QImage *picture, const uint64_t xImage,
-	const uint64_t yImage, const uint64_t xFrame, const uint64_t yFrame)
+
+void MainWindow::displayInitialImage()
 {
-	QPixmap bigPicture = QPixmap::fromImage(*picture);
-	bigPicture.scroll(xImage, yImage, bigPicture.rect());
-	displayScene->addPixmap(bigPicture);
+	emit showImage(bigJPEG->getMasterImage(), 0, 0, 0, 0);
 }

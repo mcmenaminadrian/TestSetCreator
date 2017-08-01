@@ -2,6 +2,7 @@
 #define MASTERJPEG_HPP
 
 #include <QObject>
+#include <QImage>
 #include "jpeglib.h"
 
 class MainWindow;
@@ -13,28 +14,25 @@ class MasterJPEG : public QObject
 private:
 	std::vector<unsigned char*> lines;
 	QMetaObject::Connection handleImageLoad;
-	QMetaObject::Connection handleImageDisplay;
 	uint64_t imageWidth;
 	uint64_t imageHeight;
-	QImage *mainPicture;
+	QImage* masterImage;
 	void setPictureWidth(const JDIMENSION width);
 	void setPictureHeight(const JDIMENSION height);
 	void storeScannedLine(JSAMPROW sampledLine);
-	void _showLoadedImage(const uint64_t xImage, const uint64_t yImage,
-		const uint64_t xFrame, const uint64_t yFrame);
+	void buildMasterImage();
+
 public:
 	explicit MasterJPEG(const QString& jpegName, MainWindow *mainWindow);
 	~MasterJPEG();
+	QImage* getMasterImage() const;
 
 signals:
-	void imageLoaded();
-	void drawImage(QImage* picture, const uint64_t xImage,
-		const uint64_t yImage, const uint64_t xFrame,
-		const uint64_t yFrame);
+	void imageBuilt();
 
 
 public slots:
-	void showLoadedImage();
+
 };
 
 #endif // MASTERJPEG_HPP
