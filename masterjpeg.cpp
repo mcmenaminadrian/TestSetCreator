@@ -10,8 +10,6 @@ using namespace std;
 
 MasterJPEG::MasterJPEG(const QString& jpegName, MainWindow *mainWindow)
 {
-	handleImageLoad = QObject::connect(this, SIGNAL(imageBuilt()),
-		mainWindow, SLOT(displayInitialImage()));
 	struct jpeg_decompress_struct cinfo;
 	struct jpeg_error_mgr jerr;
 	FILE* inFile;
@@ -40,11 +38,11 @@ MasterJPEG::MasterJPEG(const QString& jpegName, MainWindow *mainWindow)
 		jpeg_read_scanlines(&cinfo, buffer, 1);
 		storeScannedLine(buffer[0]);
 	}
+	buildMasterImage();
 	jpeg_finish_decompress(&cinfo);
 	jpeg_destroy_decompress(&cinfo);
 	fclose(inFile);
 
-	buildMasterImage();
 }
 
 MasterJPEG::~MasterJPEG()
@@ -84,10 +82,9 @@ void MasterJPEG::buildMasterImage()
 		}
 		i++;
 	}
-	emit imageBuilt();
 }
 
-QImage* MasterJPEG::getMasterImage() const
+QImage* MasterJPEG::getMasterImage()
 {
 	return masterImage;
 }

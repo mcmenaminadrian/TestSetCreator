@@ -24,10 +24,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	//load the file
 	displayScene = new QGraphicsScene();
 	ui->graphicsView->setScene(displayScene);
-	QObject::connect(this, SIGNAL(showImage(QImage,int,int,int,int)),
+	QObject::connect(this, SIGNAL(showImage(QImage*,const int,const int,const int,const int)),
 		ui->graphicsView,
-		SLOT(displayImage(QImage*, int, int, int, int)));
+		SLOT(displayImage(QImage*, const int, const int, const int, const int)));
 	bigJPEG = new MasterJPEG(jpegFile, this);
+	displayInitialImage();
 }
 
 MainWindow::~MainWindow()
@@ -40,5 +41,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayInitialImage()
 {
-	emit showImage(bigJPEG->getMasterImage(), 0, 0, 0, 0);
+	QImage *initialImage = bigJPEG->getMasterImage();
+	emit showImage(initialImage, 0, 0, 0, 0);
 }

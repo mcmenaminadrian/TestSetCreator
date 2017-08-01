@@ -16,19 +16,19 @@ private:
 	QMetaObject::Connection handleImageLoad;
 	uint64_t imageWidth;
 	uint64_t imageHeight;
-	QImage* masterImage;
 	void setPictureWidth(const JDIMENSION width);
 	void setPictureHeight(const JDIMENSION height);
 	void storeScannedLine(JSAMPROW sampledLine);
 	void buildMasterImage();
+	QImage *masterImage;
 
 public:
 	explicit MasterJPEG(const QString& jpegName, MainWindow *mainWindow);
 	~MasterJPEG();
-	QImage* getMasterImage() const;
+	QImage* getMasterImage();
 
 signals:
-	void imageBuilt();
+	void showImage(QImage*,int,int,int,int);
 
 
 public slots:

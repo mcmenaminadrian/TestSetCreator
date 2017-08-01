@@ -25,13 +25,15 @@ private:
 	QGraphicsScene *displayScene;
 	int xFrame;
 	int yFrame;
+
+public:
 	MasterJPEG *bigJPEG;
 
 public slots:
 	void displayInitialImage();
 
 signals:
-	void showImage(const QImage* pic, const int xPic, const int yPic,
+	void showImage(QImage* pic, const int xPic, const int yPic,
 		const int xFrame, const int yFrame);
 };
 

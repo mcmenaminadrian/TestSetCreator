@@ -9,7 +9,7 @@ PictureDisplay::PictureDisplay(QWidget* parent):QGraphicsView(parent)
 	yFrame = -1;
 	QObject::connect(this, SIGNAL(signalUpdate()), this, SLOT(update()));
 	displayScene = new QGraphicsScene();
-	setScene(displayScene);
+
 }
 
 PictureDisplay::~PictureDisplay()
@@ -17,11 +17,13 @@ PictureDisplay::~PictureDisplay()
 	delete displayScene;
 }
 
-void PictureDisplay::displayImage(const QImage* image, const int xPic,
-	const int yPic, const int _xFrame, const int _yFrame)
+void PictureDisplay::displayImage(QImage* image, int xPic,
+	int yPic, int _xFrame, int _yFrame)
 {
 	QPixmap bigPicture = QPixmap::fromImage(*image);
+	qDeleteAll(displayScene->items());
 	displayScene->addPixmap(bigPicture);
-
+	setScene(displayScene);
 	emit signalUpdate();
+	centerOn(xPic, yPic);
 }

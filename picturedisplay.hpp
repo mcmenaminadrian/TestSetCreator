@@ -22,8 +22,7 @@ public:
 protected:
 
 public slots:
-	void displayImage(const QImage*, const int, const int,
-		const int, const int);
+	void displayImage(QImage*, int, int, int, int);
 
 signals:
 	void signalUpdate();
