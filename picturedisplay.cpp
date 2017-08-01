@@ -23,7 +23,8 @@ void PictureDisplay::displayImage(QImage* image, int xPic,
 	QPixmap bigPicture = QPixmap::fromImage(*image);
 	qDeleteAll(displayScene->items());
 	displayScene->addPixmap(bigPicture);
+	QRect square(10, 10, 100, 100);
+	displayScene->addRect(square, QPen(Qt::red));
 	setScene(displayScene);
-	emit signalUpdate();
 	centerOn(xPic, yPic);
 }
