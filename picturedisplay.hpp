@@ -14,12 +14,15 @@ private:
 	int xFrame;
 	int yFrame;
 	QGraphicsScene *displayScene;
+	QGraphicsRectItem *rectItem;
+	void drawBoxFrame(const int xFrame, const int yFrame);
 
 public:
 	PictureDisplay(QWidget *parent);
 	~PictureDisplay();
 
 protected:
+	void paintEvent(QPaintEvent* event);
 
 public slots:
 	void displayImage(QImage*, int, int, int, int);

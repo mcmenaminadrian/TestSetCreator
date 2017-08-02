@@ -1,4 +1,6 @@
 #include <QRect>
+#include <QGraphicsRectItem>
+#include <QPointF>
 #include "picturedisplay.hpp"
 
 using namespace std;
@@ -9,6 +11,8 @@ PictureDisplay::PictureDisplay(QWidget* parent):QGraphicsView(parent)
 	yFrame = -1;
 	QObject::connect(this, SIGNAL(signalUpdate()), this, SLOT(update()));
 	displayScene = new QGraphicsScene();
+	rectItem = nullptr;
+
 
 }
 
@@ -23,8 +27,28 @@ void PictureDisplay::displayImage(QImage* image, int xPic,
 	QPixmap bigPicture = QPixmap::fromImage(*image);
 	qDeleteAll(displayScene->items());
 	displayScene->addPixmap(bigPicture);
-	QRect square(10, 10, 100, 100);
-	displayScene->addRect(square, QPen(Qt::red));
+	drawBoxFrame(_xFrame, _yFrame);
 	setScene(displayScene);
 	centerOn(xPic, yPic);
+}
+
+void PictureDisplay::drawBoxFrame(const int _xFrame, const int _yFrame)
+{
+	QPointF topCorner = mapToScene(QPoint(0, 0));
+	if (rectItem) {
+		rectItem->setRect(topCorner.rx() + xFrame,
+			topCorner.ry() + yFrame, 100, 100);
+	} else {
+		rectItem = displayScene->addRect(QRect(10, 10, 100, 100),
+			QPen(Qt::red));
+		xFrame = 10;
+		yFrame = 10;
+	}
+
+}
+
+void PictureDisplay::paintEvent(QPaintEvent *event)
+{
+	QGraphicsView::paintEvent(event);
+	drawBoxFrame(xFrame, yFrame);
 }
