@@ -35,6 +35,15 @@ public slots:
 signals:
 	void showImage(QImage* pic, const int xPic, const int yPic,
 		const int xFrame, const int yFrame);
+	void moveLeft();
+	void moveRight();
+	void moveUp();
+	void moveDown();
+private slots:
+	void on_pushButton_3_clicked();
+	void on_pushButton_4_clicked();
+	void on_pushButton_5_clicked();
+	void on_pushButton_6_clicked();
 };
 
 #endif // MAINWINDOW_H

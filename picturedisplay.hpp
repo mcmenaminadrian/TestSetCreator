@@ -26,6 +26,10 @@ protected:
 
 public slots:
 	void displayImage(QImage*, int, int, int, int);
+	void left();
+	void right();
+	void up();
+	void down();
 
 signals:
 	void signalUpdate();

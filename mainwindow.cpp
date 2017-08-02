@@ -24,9 +24,19 @@ MainWindow::MainWindow(QWidget *parent) :
 	//load the file
 	displayScene = new QGraphicsScene();
 	ui->graphicsView->setScene(displayScene);
-	QObject::connect(this, SIGNAL(showImage(QImage*,const int,const int,const int,const int)),
+	QObject::connect(this, SIGNAL(showImage(QImage*,const int,const int,
+		const int,const int)),
 		ui->graphicsView,
-		SLOT(displayImage(QImage*, const int, const int, const int, const int)));
+		SLOT(displayImage(QImage*, const int, const int, const int,
+		const int)));
+	QObject::connect(this, SIGNAL(moveUp()), ui->graphicsView,
+		SLOT(up()));
+	QObject::connect(this, SIGNAL(moveDown()), ui->graphicsView,
+		SLOT(down()));
+	QObject::connect(this, SIGNAL(moveLeft()), ui->graphicsView,
+		SLOT(left()));
+	QObject::connect(this, SIGNAL(moveRight()), ui->graphicsView,
+		SLOT(right()));
 	bigJPEG = new MasterJPEG(jpegFile, this);
 	displayInitialImage();
 }
@@ -43,4 +53,24 @@ void MainWindow::displayInitialImage()
 {
 	QImage *initialImage = bigJPEG->getMasterImage();
 	emit showImage(initialImage, 0, 0, 0, 0);
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    emit moveUp();
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    emit moveLeft();
+}
+
+void MainWindow::on_pushButton_5_clicked()
+{
+    emit moveRight();
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    emit moveDown();
 }

@@ -52,3 +52,39 @@ void PictureDisplay::paintEvent(QPaintEvent *event)
 	QGraphicsView::paintEvent(event);
 	drawBoxFrame(xFrame, yFrame);
 }
+
+void PictureDisplay::left()
+{
+	if (xFrame == 0) {
+		return;
+	}
+	xFrame--;
+	emit signalUpdate();
+}
+
+void PictureDisplay::up()
+{
+	if (yFrame == 0) {
+		return;
+	}
+	yFrame--;
+	emit signalUpdate();
+}
+
+void PictureDisplay::right()
+{
+	if (xFrame + 100 >= frameRect().width()) {
+		return;
+	}
+	xFrame++;
+	emit signalUpdate();
+}
+
+void PictureDisplay::down()
+{
+	if (yFrame + 100 >= frameRect().height()) {
+		return;
+	}
+	yFrame++;
+	signalUpdate();
+}
