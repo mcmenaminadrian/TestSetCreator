@@ -59,7 +59,7 @@ void PictureDisplay::left()
 		return;
 	}
 	xFrame--;
-	emit signalUpdate();
+	drawBoxFrame(xFrame, yFrame);
 }
 
 void PictureDisplay::up()
@@ -68,7 +68,7 @@ void PictureDisplay::up()
 		return;
 	}
 	yFrame--;
-	emit signalUpdate();
+	drawBoxFrame(xFrame, yFrame);
 }
 
 void PictureDisplay::right()
@@ -77,7 +77,7 @@ void PictureDisplay::right()
 		return;
 	}
 	xFrame++;
-	emit signalUpdate();
+	drawBoxFrame(xFrame, yFrame);
 }
 
 void PictureDisplay::down()
@@ -86,5 +86,5 @@ void PictureDisplay::down()
 		return;
 	}
 	yFrame++;
-	signalUpdate();
+	drawBoxFrame(xFrame, yFrame);
 }
