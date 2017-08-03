@@ -1,6 +1,9 @@
 #include <QString>
 #include <QFileDialog>
 #include <fstream>
+#include <QMessageBox>
+#include <QApplication>
+#include <QRect>
 #include "jpeglib.h"
 #include "masterjpeg.hpp"
 #include "mainwindow.h"
@@ -73,4 +76,19 @@ void MainWindow::on_pushButton_5_clicked()
 void MainWindow::on_pushButton_6_clicked()
 {
     emit moveDown();
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+	QMessageBox messageBox;
+	messageBox.setText("Quitting");
+	messageBox.exec();
+	QApplication::quit();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+	//Save a fragment
+	QRect fragment = ui->graphicsView->getFragment();
+	bigJPEG->saveFragment(fragment);
 }

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QGraphicsView>
+#include <QRect>
 
 class PictureDisplay : public QGraphicsView
 {
@@ -20,6 +21,7 @@ private:
 public:
 	PictureDisplay(QWidget *parent);
 	~PictureDisplay();
+	QRect getFragment() const;
 
 protected:
 	void paintEvent(QPaintEvent* event);

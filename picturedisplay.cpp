@@ -88,3 +88,8 @@ void PictureDisplay::down()
 	yFrame++;
 	drawBoxFrame(xFrame, yFrame);
 }
+
+QRect PictureDisplay::getFragment() const
+{
+	return QRect(xFrame, yFrame, 100, 100);
+}

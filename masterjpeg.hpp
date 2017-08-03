@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QImage>
+#include <QRect>
 #include "jpeglib.h"
 
 class MainWindow;
@@ -26,6 +27,7 @@ public:
 	explicit MasterJPEG(const QString& jpegName, MainWindow *mainWindow);
 	~MasterJPEG();
 	QImage* getMasterImage();
+	void saveFragment(const QRect& fragment) const;
 
 signals:
 	void showImage(QImage*,int,int,int,int);

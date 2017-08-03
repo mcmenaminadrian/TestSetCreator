@@ -1,6 +1,7 @@
 #include <vector>
 #include <QString>
 #include <QImage>
+#include <ctime>
 #include "jpeglib.h"
 #include "masterjpeg.hpp"
 #include "mainwindow.h"
@@ -87,6 +88,52 @@ void MasterJPEG::buildMasterImage()
 QImage* MasterJPEG::getMasterImage()
 {
 	return masterImage;
+}
+
+void MasterJPEG::saveFragment(const QRect &fragment) const
+{
+	//generate title
+	QString title("JPEG_FRAG_");
+	time_t epoch = time(nullptr);
+	title += asctime(localtime(&epoch));
+	title +=".jpeg";
+
+	struct jpeg_compress_struct cinfo;
+	struct jpeg_error_mgr jerr;
+	FILE * outFile;
+	JSAMPROW row_pointer[1];
+
+	cinfo.err = jpeg_std_error(&jerr);
+	jpeg_create_compress(&cinfo);
+
+	if ((outFile = fopen(title.toStdString().c_str(), "wb")) == NULL) {
+		fprintf(stderr, "can't create %s file",
+			title.toStdString().c_str());
+		exit(1);
+	}
+	jpeg_stdio_dest(&cinfo, outFile);
+	cinfo.image_width = fragment.width();
+	cinfo.image_height = fragment.height();
+	cinfo.input_components = 1;
+	cinfo.in_color_space = JCS_GRAYSCALE;
+	jpeg_set_defaults(&cinfo);
+
+	jpeg_set_quality(&cinfo, 95, TRUE);
+	jpeg_start_compress(&cinfo, TRUE);
+
+	unsigned char* x = (unsigned char *)malloc(fragment.width());
+	for (int j = 0; j < fragment.height(); j++)
+		for (int i = 0; i < fragment.width(); i++) {
+			x[i] = (lines.at(fragment.top() + j)).
+				at(fragment.left() + i);
+		}
+		row_pointer[0] = x;
+		jpeg_write_scanlines(&cinfo, row_pointer, 1);
+	}
+	jpeg_finish_compress(&cinfo);
+	fclose(outFile);
+	jpeg_destroy_compress(&cinfo);
+	free(x);
 }
 
 
