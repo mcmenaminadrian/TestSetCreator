@@ -93,9 +93,10 @@ QImage* MasterJPEG::getMasterImage()
 void MasterJPEG::saveFragment(const QRect &fragment) const
 {
 	//generate title
-	QString title("JPEG_FRAG_");
 	time_t epoch = time(nullptr);
-	title += asctime(localtime(&epoch));
+	QString title;
+	title = title.setNum(epoch, 16);
+	title.prepend("JPEG_FRAG_"),
 	title +=".jpeg";
 
 	struct jpeg_compress_struct cinfo;

@@ -91,5 +91,7 @@ void PictureDisplay::down()
 
 QRect PictureDisplay::getFragment() const
 {
-	return QRect(xFrame, yFrame, 100, 100);
+	QPointF topCorner = mapToScene(0, 0);
+	return QRect(xFrame + topCorner.rx(), yFrame + topCorner.ry(),
+		100, 100);
 }
