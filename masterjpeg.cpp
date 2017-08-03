@@ -122,10 +122,10 @@ void MasterJPEG::saveFragment(const QRect &fragment) const
 	jpeg_start_compress(&cinfo, TRUE);
 
 	unsigned char* x = (unsigned char *)malloc(fragment.width());
-	for (int j = 0; j < fragment.height(); j++)
+	for (int j = 0; j < fragment.height(); j++) {
 		for (int i = 0; i < fragment.width(); i++) {
-			x[i] = (lines.at(fragment.top() + j)).
-				at(fragment.left() + i);
+			x[i] = (lines.at(fragment.top() + j))
+				[fragment.left() + i];
 		}
 		row_pointer[0] = x;
 		jpeg_write_scanlines(&cinfo, row_pointer, 1);
