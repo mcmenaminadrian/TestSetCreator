@@ -7,8 +7,9 @@ using namespace std;
 
 PictureDisplay::PictureDisplay(QWidget* parent):QGraphicsView(parent)
 {
-	xFrame = -1;
-	yFrame = -1;
+    xFrame = 10;
+    yFrame = 10;
+    scaleFactor = 100;
 	QObject::connect(this, SIGNAL(signalUpdate()), this, SLOT(update()));
 	displayScene = new QGraphicsScene();
 	rectItem = nullptr;
@@ -27,7 +28,7 @@ void PictureDisplay::displayImage(QImage* image, int xPic,
 	QPixmap bigPicture = QPixmap::fromImage(*image);
 	qDeleteAll(displayScene->items());
 	displayScene->addPixmap(bigPicture);
-	drawBoxFrame(_xFrame, _yFrame);
+    drawBoxFrame(_xFrame, _yFrame);
 	setScene(displayScene);
 	centerOn(xPic, yPic);
 }
@@ -37,9 +38,9 @@ void PictureDisplay::drawBoxFrame(const int _xFrame, const int _yFrame)
 	QPointF topCorner = mapToScene(QPoint(0, 0));
 	if (rectItem) {
 		rectItem->setRect(topCorner.rx() + xFrame,
-			topCorner.ry() + yFrame, 100, 100);
+            topCorner.ry() + yFrame, scaleFactor, scaleFactor);
 	} else {
-		rectItem = displayScene->addRect(QRect(10, 10, 100, 100),
+        rectItem = displayScene->addRect(QRect(10, 10, scaleFactor, scaleFactor),
 			QPen(Qt::red));
 		xFrame = 10;
 		yFrame = 10;
@@ -93,5 +94,11 @@ QRect PictureDisplay::getFragment() const
 {
 	QPointF topCorner = mapToScene(0, 0);
 	return QRect(xFrame + topCorner.rx(), yFrame + topCorner.ry(),
-		100, 100);
+        scaleFactor, scaleFactor);
+}
+
+void PictureDisplay::reScaleFrame(const int scaleF)
+{
+    scaleFactor = 100 + scaleF * 3;
+    drawBoxFrame(xFrame, yFrame);
 }

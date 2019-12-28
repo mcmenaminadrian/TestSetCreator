@@ -95,46 +95,54 @@ void MasterJPEG::saveFragment(const QRect &fragment) const
 	//generate title
 	time_t epoch = time(nullptr);
 	QString title;
-	title = title.setNum(epoch, 16);
-	title.prepend("JPEG_FRAG_"),
-	title +=".jpeg";
 
-	struct jpeg_compress_struct cinfo;
-	struct jpeg_error_mgr jerr;
-	FILE * outFile;
-	JSAMPROW row_pointer[1];
+    for (int i=0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            title = title.setNum(epoch, 16);
+            title.prepend("JPEG_FRAG_");
+            title += QString::number(i);
+            title += "_";
+            title += QString::number(j);
+            title +=".jpeg";
 
-	cinfo.err = jpeg_std_error(&jerr);
-	jpeg_create_compress(&cinfo);
+            struct jpeg_compress_struct cinfo;
+            struct jpeg_error_mgr jerr;
+            FILE * outFile;
+            JSAMPROW row_pointer[1];
 
-	if ((outFile = fopen(title.toStdString().c_str(), "wb")) == NULL) {
-		fprintf(stderr, "can't create %s file",
-			title.toStdString().c_str());
-		exit(1);
-	}
-	jpeg_stdio_dest(&cinfo, outFile);
-	cinfo.image_width = fragment.width();
-	cinfo.image_height = fragment.height();
-	cinfo.input_components = 1;
-	cinfo.in_color_space = JCS_GRAYSCALE;
-	jpeg_set_defaults(&cinfo);
+            cinfo.err = jpeg_std_error(&jerr);
+            jpeg_create_compress(&cinfo);
 
-	jpeg_set_quality(&cinfo, 95, TRUE);
-	jpeg_start_compress(&cinfo, TRUE);
+            if ((outFile = fopen(title.toStdString().c_str(), "wb")) == NULL) {
+                fprintf(stderr, "can't create %s file",
+                    title.toStdString().c_str());
+                exit(1);
+            }
+            jpeg_stdio_dest(&cinfo, outFile);
+            cinfo.image_width = fragment.width()/8;
+            cinfo.image_height = fragment.height()/8;
+            cinfo.input_components = 1;
+            cinfo.in_color_space = JCS_GRAYSCALE;
+            jpeg_set_defaults(&cinfo);
 
-	unsigned char* x = (unsigned char *)malloc(fragment.width());
-	for (int j = 0; j < fragment.height(); j++) {
-		for (int i = 0; i < fragment.width(); i++) {
-			x[i] = (lines.at(fragment.top() + j))
-				[fragment.left() + i];
-		}
-		row_pointer[0] = x;
-		jpeg_write_scanlines(&cinfo, row_pointer, 1);
-	}
-	jpeg_finish_compress(&cinfo);
-	fclose(outFile);
-	jpeg_destroy_compress(&cinfo);
-	free(x);
+            jpeg_set_quality(&cinfo, 95, TRUE);
+            jpeg_start_compress(&cinfo, TRUE);
+
+            unsigned char* x = (unsigned char *)malloc(fragment.width()/8);
+            for (int l = 0; l < fragment.height()/8; l++) {
+                for (int k = 0; k < fragment.width()/8; k++) {
+                    x[k] = (lines.at(fragment.top() + l + i * fragment.height()/8))
+                        [fragment.left() + k + j * fragment.width()/8];
+                }
+                row_pointer[0] = x;
+                jpeg_write_scanlines(&cinfo, row_pointer, 1);
+            }
+            jpeg_finish_compress(&cinfo);
+            fclose(outFile);
+            jpeg_destroy_compress(&cinfo);
+            free(x);
+        }
+    }
 }
 
 

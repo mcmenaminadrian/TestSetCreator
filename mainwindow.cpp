@@ -40,6 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
 		SLOT(left()));
 	QObject::connect(this, SIGNAL(moveRight()), ui->graphicsView,
 		SLOT(right()));
+    QObject::connect(this, SIGNAL(reScale(const int)), ui->graphicsView,
+                     SLOT(reScaleFrame(const int)));
 	bigJPEG = new MasterJPEG(jpegFile, this);
 	displayInitialImage();
 }
@@ -91,4 +93,14 @@ void MainWindow::on_pushButton_clicked()
 	//Save a fragment
 	QRect fragment = ui->graphicsView->getFragment();
 	bigJPEG->saveFragment(fragment);
+}
+
+void MainWindow::on_verticalSlider_sliderMoved(int position)
+{
+
+}
+
+void MainWindow::on_verticalSlider_valueChanged(const int value)
+{
+    emit reScale(value);
 }

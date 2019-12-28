@@ -6,7 +6,9 @@
 
 QT       += core gui
 CONFIG += c++11
-LIBS += -ljpeg
+LIBS += -L/usr/local/lib -ljpeg
+INCLUDEPATH += /usr/local/include
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

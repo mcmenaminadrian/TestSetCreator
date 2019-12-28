@@ -14,6 +14,7 @@ class PictureDisplay : public QGraphicsView
 private:
 	int xFrame;
 	int yFrame;
+    int scaleFactor;
 	QGraphicsScene *displayScene;
 	QGraphicsRectItem *rectItem;
 	void drawBoxFrame(const int xFrame, const int yFrame);
@@ -32,6 +33,7 @@ public slots:
 	void right();
 	void up();
 	void down();
+    void reScaleFrame(int);
 
 signals:
 	void signalUpdate();

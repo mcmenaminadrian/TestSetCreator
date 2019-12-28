@@ -39,6 +39,7 @@ signals:
 	void moveRight();
 	void moveUp();
 	void moveDown();
+    void reScale(const int);
 private slots:
 	void on_pushButton_3_clicked();
 	void on_pushButton_4_clicked();
@@ -46,6 +47,8 @@ private slots:
 	void on_pushButton_6_clicked();
 	void on_pushButton_2_clicked();
 	void on_pushButton_clicked();
+    void on_verticalSlider_sliderMoved(int position);
+    void on_verticalSlider_valueChanged(const int value);
 };
 
 #endif // MAINWINDOW_H
